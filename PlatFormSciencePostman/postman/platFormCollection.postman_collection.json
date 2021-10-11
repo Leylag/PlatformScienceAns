@@ -1,0 +1,101 @@
+{
+	"info": {
+		"_postman_id": "62074000-bdeb-45ca-8e0f-edb0f921edb1",
+		"name": "platFormCollection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "PlatFormSience",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"let responseCode = pm.iterationData.get(\"responseCode\");",
+							"console.log(responseCode);",
+							"let dimension = pm.iterationData.get(\"dimension\");   ",
+							"let coords = pm.iterationData.get(\"coords\");      ",
+							"let patches = pm.iterationData.get(\"patches\");             ",
+							"let instructions = pm.iterationData.get(\"instructions\");    ",
+							"let coordinates = pm.iterationData.get(\"coordinates\");      ",
+							"let cleanedPatches = pm.iterationData.get(\"cleanedPatches\");",
+							" ",
+							"",
+							"pm.environment.set(\"responseCode\",responseCode);",
+							"pm.environment.set(\"dimension\",dimension);",
+							"pm.environment.set(\"coords\",coords);",
+							"pm.environment.set(\"patches\",patches);",
+							"pm.environment.set(\"instructions\",instructions);",
+							"pm.environment.set(\"coordinates\",coordinates);",
+							"pm.environment.set(\"cleanedPatches\",cleanedPatches);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = JSON.parse(responseBody);",
+							"pm.test(\" expect response should have a status\", function () {",
+							"    let responseCode = pm.environment.get(\"responseCode\"); ",
+							"    pm.response.to.have.status(responseCode);",
+							"});",
+							"",
+							"",
+							"pm.test(\"I expect response to include coords\",function(){",
+							"   if(pm.response.code === 200) {",
+							"       resultCoord = jsonData.coords;",
+							"       expectCoord = JSON.parse(pm.environment.get(\"coordinates\"));",
+							"       pm.expect(JSON.stringify(resultCoord)).to.equal(JSON.stringify(expectCoord));",
+							"   }",
+							"   if(pm.response.code === 400) {",
+							"       pm.response.to.have.status(400);",
+							"   }",
+							"})",
+							"",
+							"",
+							"pm.test(\"I expect response to include patches\",function(){",
+							"   if(pm.response.code === 200) {",
+							"       resultPatches = jsonData.patches;",
+							"       expectPatches = pm.environment.get(\"cleanedPatches\");",
+							"       pm.expect(resultPatches).to.equal(expectPatches);",
+							"   }",
+							"   if(pm.response.code === 400) {",
+							"       pm.response.to.have.status(400);",
+							"   }",
+							"})",
+							"",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"roomSize\": {{dimension}},\n    \"patches\": {{patches}},\n    \"coords\": {{coords}},\n    \"instructions\": \"{{instructions}}\"\n  }\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "url",
+					"host": [
+						"url"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
